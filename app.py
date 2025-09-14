@@ -79,7 +79,13 @@ def extract_score(text):
 
 # --- サイドバー ---
 st.sidebar.header("設定")
-api_key = st.sidebar.text_input("Google AI の APIキーを入力してください", type="password")
+# 変更後 (デプロイ用)
+try:
+    # Streamlit Cloudの秘密管理からAPIキーを読み込む
+    api_key = st.secrets["GOOGLE_API_KEY"]
+except:
+    # ローカルで動かす時や、キーが設定されていない時用のフォールバック
+    api_key = st.sidebar.text_input("Google AI の APIキーを入力してください", type="password")
 app_mode = st.sidebar.radio("モードを選択してください", ("通常採点", "模写採点", "📈 成長の記録"))
 
 
@@ -195,3 +201,4 @@ elif app_mode == "📈 成長の記録":
                 img = Image.open(BytesIO(record['image_blob']))
                 st.image(img, width=200)
                 st.markdown(record['feedback'])
+
